@@ -55,7 +55,23 @@ minetest.register_node("macronodes:bancada", { -- Bancada de Trabalho
 	end,
 })
 
-minetest.register_craft({ -- Receitas de Bancada de Trabalho
+-- Altera receitas de outros mods que sejam iguais a essa
+if minetest.registered_nodes["xdecor:workbench"] then
+	-- Remove receita antiga
+	minetest.clear_craft({output = 'xdecor:workbench'})
+	-- Nova receita
+	minetest.register_craft({ 
+		output = 'xdecor:workbench',
+		recipe = {
+			{'', 'group:wood', ''},
+			{'default:steel_ingot', 'macronodes:bancada', 'default:steel_ingot'},
+			{'', 'group:wood', ''},
+		}
+	})
+end
+
+-- Receitas de Bancada de Trabalho
+minetest.register_craft({ 
 	output = 'macronodes:bancada',
 	recipe = {
 		{'group:wood', 'group:wood'},
@@ -69,3 +85,26 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		acesso[player:get_player_name()] = nil
 	end
 end)
+
+-- Altera menu sfinv de craftação para 2x2
+if sfinv then
+	sfinv.override_page("sfinv:crafting", {
+		get = function(self, player, context)
+			return sfinv.make_formspec(player, context, [[
+					list[current_player;craft;2,1;2,2;]
+					list[current_player;craftpreview;5,1.5;1,1;]
+					image[4,1.5;1,1;gui_furnace_arrow_bg.png^[transformR270]
+					listring[current_player;main]
+					listring[current_player;craft]
+					image[0,4.7;1,1;gui_hb_bg.png]
+					image[1,4.7;1,1;gui_hb_bg.png]
+					image[2,4.7;1,1;gui_hb_bg.png]
+					image[3,4.7;1,1;gui_hb_bg.png]
+					image[4,4.7;1,1;gui_hb_bg.png]
+					image[5,4.7;1,1;gui_hb_bg.png]
+					image[6,4.7;1,1;gui_hb_bg.png]
+					image[7,4.7;1,1;gui_hb_bg.png]
+				]], true)
+		end
+	})
+end
