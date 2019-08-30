@@ -91,7 +91,8 @@ if sfinv then
 	sfinv.override_page("sfinv:crafting", {
 		get = function(self, player, context)
 			return sfinv.make_formspec(player, context, [[
-					list[current_player;craft;2,1;2,2;]
+					list[current_player;craft;2,1;2,1;1]
+					list[current_player;craft;2,2;2,1;4]
 					list[current_player;craftpreview;5,1.5;1,1;]
 					image[4,1.5;1,1;gui_furnace_arrow_bg.png^[transformR270]
 					listring[current_player;main]
