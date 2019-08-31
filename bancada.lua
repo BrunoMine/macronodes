@@ -19,7 +19,7 @@ local function drop_craft(player, pos)
 	local size = invref:get_size("craft")
 	for i = 1, size do
 		local item = invref:get_stack("craft", i)
-		if item ~= nil and tror.trocar_plus(player, {""}, {item}) ~= true then 
+		if item ~= nil then 
 			minetest.env:add_item({x = pos.x + (((math.random(1, 70)/100)-0.35)), y = pos.y+1, z = pos.z + (((math.random(1, 70)/100)-0.35))}, item)
 		end
 		invref:set_stack("craft", i, "")
@@ -90,6 +90,7 @@ end)
 if sfinv then
 	sfinv.override_page("sfinv:crafting", {
 		get = function(self, player, context)
+			drop_craft(player, player:getpos())
 			return sfinv.make_formspec(player, context, [[
 					list[current_player;craft;2,1;2,1;1]
 					list[current_player;craft;2,2;2,1;4]
@@ -106,6 +107,14 @@ if sfinv then
 					image[6,4.7;1,1;gui_hb_bg.png]
 					image[7,4.7;1,1;gui_hb_bg.png]
 				]], true)
-		end
+		end,
+		on_leave = function(self, player, context)
+			drop_craft(player, player:getpos())
+		end,
+		on_player_receive_fields = function(self, player, context, fields)
+			if fields.quit then
+				drop_craft(player, player:getpos())
+			end
+		end,
 	})
 end
